@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Fraunces, Manrope } from "next/font/google";
-import { createClient } from "@/utils/supabase/server"; // adjust path if different
+import { createClient } from "@/utils/supabase/server";
 
 const fraunces = Fraunces({
   subsets: ["latin"],

@@ -29,9 +29,7 @@ export default function SignUp() {
       return
     }
 
-    // TEMP: routing to /dashboard for now during dev/demo.
-    // Swap to router.push('/login') once email confirmation is enforced,
-    // since signUp() won't have an active session until the email is confirmed.
+
     router.push('/dashboard')
   }
 

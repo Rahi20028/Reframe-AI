@@ -1,16 +1,14 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import Link from 'next/link'
 import { createClient } from '@/utils/supabase/client'
-import { useRef } from 'react'
 import { Bot, User, Send } from 'lucide-react'
-// ...
-
-
 
 type Message = {
   id: string
   role: 'user' | 'assistant'
   content: string
+  suggestExercise?: boolean
 }
 
 export default function ChatPage() {
@@ -19,12 +17,11 @@ export default function ChatPage() {
   const supabase = createClient()
   const scrollRef = useRef<HTMLDivElement>(null)
 
-  // Load past messages when the page first opens
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
-  useEffect(() => {
 
+  useEffect(() => {
     const loadMessages = async () => {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
@@ -34,7 +31,7 @@ export default function ChatPage() {
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: true })
-        .limit(20) // capped recent-message window
+        .limit(20)
 
       if (error) {
         console.error('Failed to load messages:', error)
@@ -42,7 +39,6 @@ export default function ChatPage() {
       }
 
       if (data.length === 0) {
-        // First-time user — show a friendly opener, don't save it yet
         setMessages([{ id: 'welcome', role: 'assistant', content: "Hi, I'm here to listen. What's on your mind today?" }])
       } else {
         setMessages(data.map((m) => ({ id: m.id, role: m.role, content: m.content })))
@@ -61,7 +57,6 @@ export default function ChatPage() {
     const userText = input
     setInput('')
 
-    // Save + show the user's message
     const { data: savedUserMsg, error: userError } = await supabase
       .from('messages')
       .insert({ user_id: user.id, role: 'user', content: userText })
@@ -86,7 +81,6 @@ export default function ChatPage() {
 
       const data = await res.json()
 
-      // Save + show the assistant's reply
       const { data: savedAssistantMsg, error: assistantError } = await supabase
         .from('messages')
         .insert({ user_id: user.id, role: 'assistant', content: data.reply })
@@ -98,7 +92,7 @@ export default function ChatPage() {
         return
       }
 
-      setMessages((prev) => [...prev, { id: savedAssistantMsg.id, role: 'assistant', content: data.reply }])
+      setMessages((prev) => [...prev, { id: savedAssistantMsg.id, role: 'assistant', content: data.reply, suggestExercise: data.suggestExercise }])
     } catch (err) {
       console.error('Chat error:', err)
       setMessages((prev) => [...prev, { id: Date.now().toString(), role: 'assistant', content: "Sorry, something went wrong. Please try again in a moment." }])
@@ -115,32 +109,45 @@ export default function ChatPage() {
 
       <div className="flex-1 overflow-y-auto px-6 py-6 space-y-5">
         {messages.map((msg) => (
-          <div
-            key={msg.id}
-            className={`flex items-end gap-2.5 ${msg.role === 'user' ? 'flex-row-reverse' : ''
-              }`}
-          >
+          <div key={msg.id} className="space-y-1.5">
             <div
-              className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${msg.role === 'user' ? 'bg-[#E2A83D]' : 'bg-[#3F7268]'
+              className={`flex items-end gap-2.5 ${msg.role === 'user' ? 'flex-row-reverse' : ''
                 }`}
             >
-              {msg.role === 'user' ? (
-                <User size={14} className="text-[#17241E]" />
-              ) : (
-                <Bot size={14} className="text-white" />
-              )}
+              <div
+                className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${msg.role === 'user' ? 'bg-[#E2A83D]' : 'bg-[#3F7268]'
+                  }`}
+              >
+                {msg.role === 'user' ? (
+                  <User size={14} className="text-[#17241E]" />
+                ) : (
+                  <Bot size={14} className="text-white" />
+                )}
+              </div>
+
+              <div
+                className={`max-w-[75%] md:max-w-[65%] px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${msg.role === 'user'
+                  ? 'bg-[#3F7268] text-white rounded-br-sm'
+                  : 'bg-white border border-[#D9E2DE] text-[#17241E] rounded-bl-sm shadow-sm'
+                  }`}
+              >
+                {msg.content}
+              </div>
             </div>
 
-            <div
-              className={`max-w-[75%] md:max-w-[65%] px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${msg.role === 'user'
-                ? 'bg-[#3F7268] text-white rounded-br-sm'
-                : 'bg-white border border-[#D9E2DE] text-[#17241E] rounded-bl-sm shadow-sm'
-                }`}
-            >
-              {msg.content}
-            </div>
+            {msg.suggestExercise && (
+              <div className="flex justify-start pl-9">
+                <Link
+                  href="/dashboard/exercises?autostart=true"
+                  className="inline-flex items-center gap-1.5 text-xs font-medium text-[#3F7268] bg-white border border-[#D9E2DE] px-3 py-1.5 rounded-full hover:bg-[#EEF4F2] transition-colors shadow-sm"
+                >
+                  Try a guided exercise →
+                </Link>
+              </div>
+            )}
           </div>
         ))}
+
         <div ref={scrollRef} />
       </div>
 

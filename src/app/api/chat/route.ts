@@ -13,6 +13,14 @@ function detectCrisis(message: string): boolean {
   return CRISIS_KEYWORDS.some((keyword) => lower.includes(keyword))
 }
 
+const STRESS_KEYWORDS = [
+  'stressed', 'anxious', 'overwhelmed', 'panicking', 'can\'t focus', 'racing thoughts'
+]
+
+function detectStress(message: string): boolean {
+  const lower = message.toLowerCase()
+  return STRESS_KEYWORDS.some((keyword) => lower.includes(keyword))
+}
 const cbtPromptTemplate = PromptTemplate.fromTemplate(`
 You are a supportive CBT-based mental wellness companion for students aged 15-24.
 Use cognitive behavioral therapy techniques: help the user identify thought patterns,
@@ -80,5 +88,6 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({
     flagged: false,
     reply: response.content,
+    suggestExercise: detectStress(message), // new field
   })
 }

@@ -21,6 +21,7 @@ function detectStress(message: string): boolean {
   const lower = message.toLowerCase()
   return STRESS_KEYWORDS.some((keyword) => lower.includes(keyword))
 }
+
 const cbtPromptTemplate = PromptTemplate.fromTemplate(`
 You are a supportive CBT-based mental wellness companion for students aged 15-24.
 Use cognitive behavioral therapy techniques: help the user identify thought patterns,
@@ -43,6 +44,7 @@ export async function POST(req: NextRequest) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
+  // Crisis path — stream the fixed message as a single chunk, so the frontend logic stays uniform
   if (detectCrisis(message)) {
     if (user) {
       const { error } = await supabase.from('crisis_events').insert({
@@ -52,13 +54,25 @@ export async function POST(req: NextRequest) {
       if (error) console.error('Crisis event insert failed:', error)
     }
 
-    return NextResponse.json({
-      flagged: true,
-      reply: "It sounds like you're going through something really difficult right now. You're not alone, and support is available. Please consider reaching out to a crisis helpline or a trusted person in your life.",
+    const crisisReply = "It sounds like you're going through something really difficult right now. You're not alone, and support is available. Please consider reaching out to a crisis helpline or a trusted person in your life."
+
+    const stream = new ReadableStream({
+      start(controller) {
+        controller.enqueue(new TextEncoder().encode(crisisReply))
+        controller.close()
+      },
+    })
+
+    return new NextResponse(stream, {
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+        'X-Flagged': 'true',
+        'X-Suggest-Exercise': 'false',
+      },
     })
   }
 
-  // Fetch recent message history for this user (capped window)
+  // Fetch recent message history for this user
   let historyText = 'No prior messages.'
   if (user) {
     const { data: recentMessages } = await supabase
@@ -66,7 +80,7 @@ export async function POST(req: NextRequest) {
       .select('role, content')
       .eq('user_id', user.id)
       .order('created_at', { ascending: false })
-      .limit(10) // smaller window just for what we feed into the prompt
+      .limit(10)
 
     if (recentMessages && recentMessages.length > 0) {
       historyText = recentMessages
@@ -83,11 +97,24 @@ export async function POST(req: NextRequest) {
   })
 
   const prompt = await cbtPromptTemplate.format({ history: historyText, userMessage: message })
-  const response = await model.invoke(prompt)
+  const groqStream = await model.stream(prompt)
 
-  return NextResponse.json({
-    flagged: false,
-    reply: response.content,
-    suggestExercise: detectStress(message), // new field
+  const encoder = new TextEncoder()
+  const stream = new ReadableStream({
+    async start(controller) {
+      for await (const chunk of groqStream) {
+        const text = typeof chunk.content === 'string' ? chunk.content : ''
+        if (text) controller.enqueue(encoder.encode(text))
+      }
+      controller.close()
+    },
+  })
+
+  return new NextResponse(stream, {
+    headers: {
+      'Content-Type': 'text/plain; charset=utf-8',
+      'X-Flagged': 'false',
+      'X-Suggest-Exercise': String(detectStress(message)),
+    },
   })
 }

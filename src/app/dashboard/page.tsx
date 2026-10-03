@@ -70,6 +70,10 @@ export default function ChatPage() {
 
     setMessages((prev) => [...prev, { id: savedUserMsg.id, role: 'user', content: userText }])
 
+    // Add an empty placeholder assistant message that we'll fill in as chunks arrive
+    const tempId = `streaming-${Date.now()}`
+    setMessages((prev) => [...prev, { id: tempId, role: 'assistant', content: '' }])
+
     try {
       const res = await fetch('/api/chat', {
         method: 'POST',
@@ -77,13 +81,32 @@ export default function ChatPage() {
         body: JSON.stringify({ message: userText }),
       })
 
-      if (!res.ok) throw new Error(`Server responded with ${res.status}`)
+      if (!res.ok || !res.body) throw new Error(`Server responded with ${res.status}`)
 
-      const data = await res.json()
+      const flagged = res.headers.get('X-Flagged') === 'true'
+      const suggestExercise = res.headers.get('X-Suggest-Exercise') === 'true'
 
+      const reader = res.body.getReader()
+      const decoder = new TextDecoder()
+      let fullText = ''
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+
+        const chunkText = decoder.decode(value, { stream: true })
+        fullText += chunkText
+
+        // Update the placeholder message live, chunk by chunk
+        setMessages((prev) =>
+          prev.map((m) => (m.id === tempId ? { ...m, content: fullText } : m))
+        )
+      }
+
+      // Streaming finished — now save the complete message to Supabase
       const { data: savedAssistantMsg, error: assistantError } = await supabase
         .from('messages')
-        .insert({ user_id: user.id, role: 'assistant', content: data.reply })
+        .insert({ user_id: user.id, role: 'assistant', content: fullText })
         .select()
         .single()
 
@@ -92,10 +115,23 @@ export default function ChatPage() {
         return
       }
 
-      setMessages((prev) => [...prev, { id: savedAssistantMsg.id, role: 'assistant', content: data.reply, suggestExercise: data.suggestExercise }])
+      // Replace the temporary streaming message with the real saved one (correct id + suggestExercise flag)
+      setMessages((prev) =>
+        prev.map((m) =>
+          m.id === tempId
+            ? { id: savedAssistantMsg.id, role: 'assistant', content: fullText, suggestExercise }
+            : m
+        )
+      )
     } catch (err) {
       console.error('Chat error:', err)
-      setMessages((prev) => [...prev, { id: Date.now().toString(), role: 'assistant', content: "Sorry, something went wrong. Please try again in a moment." }])
+      setMessages((prev) =>
+        prev.map((m) =>
+          m.id === tempId
+            ? { ...m, content: "Sorry, something went wrong. Please try again in a moment." }
+            : m
+        )
+      )
     }
   }
 

@@ -1,0 +1,60 @@
+REFRAME-AI — LIBRARIES & TOOLS REFERENCE
+==========================================
+Note: this is a human-readable reference for documentation purposes.
+The actual dependency list/versions live in package.json — use that
+for anything that needs to be reproducible (e.g. `npm install`).
+
+CORE FRAMEWORK
+--------------
+next                    — React framework (App Router)
+react                   — UI library
+react-dom               — React's DOM renderer
+typescript              — Type-safe JavaScript
+tailwindcss             — Utility-first CSS styling
+
+BACKEND / DATABASE (Supabase)
+------------------------------
+@supabase/supabase-js   — Supabase client (core)
+@supabase/ssr           — Supabase client for Next.js (browser + server variants)
+
+AI / LANGCHAIN
+--------------
+@langchain/core         — LangChain base (PromptTemplate, etc.)
+@langchain/groq         — LangChain wrapper for Groq's hosted LLM API
+
+RAG / EMBEDDINGS
+----------------
+@xenova/transformers    — Local embedding model (Xenova/all-MiniLM-L6-v2)
+                          used for RAG example retrieval; no API key needed
+
+UI / DATA VISUALIZATION
+------------------------
+lucide-react            — Icon set used throughout the app
+recharts                — Mood tracking line chart
+
+GAMES (Sprint 6)
+-----------------
+sudoku-gen               — Sudoku puzzle generation + solution validation
+chess.js                 — Chess rules engine (legal moves, check/checkmate)
+react-chessboard          — Chessboard UI component (v5 — uses the `options`
+                             prop API, different from v4's individual props)
+
+DEV / SCRIPTING TOOLS
+-----------------------
+tsx         (dev)       — Run TypeScript files directly (used for seed script)
+dotenv      (dev)       — Load .env.local into standalone scripts
+
+TESTING
+-------
+@playwright/test (dev)  — End-to-end browser testing
+
+EXTERNAL SERVICES (not npm packages)
+--------------------------------------
+Supabase    — Hosted Postgres database, Auth, Row-Level Security, pgvector
+Groq        — Hosted LLM inference API (model: openai/gpt-oss-120b)
+Vercel      — Deployment / hosting
+
+NOTES
+-----
+- Claude API (@langchain/anthropic) was used briefly in early development,
+  then replaced by Groq due to API credit costs — no longer in the project.

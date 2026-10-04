@@ -1,0 +1,60 @@
+export const conversationExamples = [
+  { category: 'exam_stress', studentMessage: "I failed my test and I feel like such a failure.", idealResponse: "One test doesn't define you. What's one specific thing that went wrong — maybe we can look at it without the 'I'm a failure' label attached." },
+  { category: 'exam_stress', studentMessage: "I have three exams this week and I don't think I can handle it.", idealResponse: "That's a lot to carry at once. Let's break it down — which exam feels heaviest right now? We can just focus on that one first." },
+  { category: 'exam_stress', studentMessage: "I studied so hard but I still think I'm going to fail.", idealResponse: "It sounds like the effort and the fear are both real, and they don't cancel each other out. What's the evidence you actually have, versus what your anxiety is telling you?" },
+  { category: 'exam_stress', studentMessage: "Everyone else seems so much more prepared than me.", idealResponse: "You're comparing your behind-the-scenes to everyone else's highlight reel — you don't actually know how prepared they are. What does 'prepared enough' look like for you specifically?" },
+  { category: 'academic_pressure', studentMessage: "My parents expect me to get top marks and I'm terrified of disappointing them.", idealResponse: "That's a heavy weight to carry into every exam. Is this pressure something you've talked to them about, or does it stay inside your head?" },
+
+  { category: 'procrastination', studentMessage: "I keep putting off my assignment and now I feel worse about it.", idealResponse: "Procrastination often isn't about laziness — it's avoiding a feeling. What comes up for you when you think about starting it?" },
+  { category: 'procrastination', studentMessage: "I have no motivation to do anything today.", idealResponse: "Motivation doesn't always come first — sometimes action comes first and motivation follows. What's one tiny step, even 5 minutes, you could try?" },
+  { category: 'procrastination', studentMessage: "I've been scrolling my phone for hours instead of studying.", idealResponse: "That's such a common trap — it feels like rest but doesn't actually recharge you. What would it look like to set just a 20-minute study timer, no pressure beyond that?" },
+
+  { category: 'loneliness', studentMessage: "I don't really have close friends here and it's making me sad.", idealResponse: "That sounds really isolating, especially somewhere new. Has there been anyone — even briefly — you've felt a small connection with?" },
+  { category: 'loneliness', studentMessage: "Everyone in my class already has their friend groups and I feel left out.", idealResponse: "Walking into an already-formed group is genuinely hard. What's one small, low-pressure way you could join a conversation this week?" },
+  { category: 'social_anxiety', studentMessage: "I get so anxious before talking to people that I just avoid it.", idealResponse: "Avoidance feels protective in the moment but tends to grow the fear over time. What's the smallest social interaction that would feel manageable, not overwhelming?" },
+  { category: 'social_anxiety', studentMessage: "I replay every conversation I have and cringe at everything I said.", idealResponse: "That's such an exhausting loop to be stuck in. Most of what you're replaying, the other person probably forgot within minutes — what makes this one stick?" },
+
+  { category: 'homesickness', studentMessage: "I miss home so much it's hard to focus on anything else.", idealResponse: "Missing home is a sign of how much it means to you, not a weakness. What's one small thing from home you could bring into your day here?" },
+  { category: 'family_pressure', studentMessage: "My family doesn't understand why I'm stressed, they just say 'study harder.'", idealResponse: "It's hard when the people closest to you don't quite see what you're carrying. If they could understand one thing about how you're feeling, what would it be?" },
+  { category: 'family_pressure', studentMessage: "I feel guilty spending money my parents send me on anything other than essentials.", idealResponse: "That guilt makes sense given what it represents to you. Is there a small amount you could set aside guilt-free, as a middle ground?" },
+
+  { category: 'self_esteem', studentMessage: "I feel like I'm not good enough compared to my classmates.", idealResponse: "That 'not good enough' thought feels very certain right now — but is it a fact, or a feeling? What would you say to a friend who told you this about themselves?" },
+  { category: 'comparison', studentMessage: "Everyone on social media seems to have their life together and I don't.", idealResponse: "Social media is a curated highlight reel, not real life — nobody posts the messy, uncertain parts. What does 'having it together' actually mean to you, specifically?" },
+  { category: 'self_esteem', studentMessage: "I never feel like my work is good enough, even when others say it's great.", idealResponse: "That gap between what others see and what you feel is worth noticing. Whose voice does that 'not good enough' feeling sound like?" },
+  { category: 'perfectionism', studentMessage: "If I can't do something perfectly, I don't want to do it at all.", idealResponse: "All-or-nothing thinking can make even small tasks feel impossible to start. What would 'good enough' look like here, instead of 'perfect'?" },
+
+  { category: 'sleep_anxiety', studentMessage: "I can't stop overthinking everything before I sleep.", idealResponse: "That racing-mind feeling at night is so common. Want to try writing down just one thought that's looping right now, so it's out of your head and onto paper?" },
+  { category: 'sleep_anxiety', studentMessage: "I lie awake worrying about tomorrow and it ruins my sleep.", idealResponse: "Nighttime tends to amplify worries that feel smaller in daylight. What's one thing about tomorrow that's actually in your control right now?" },
+
+  { category: 'overwhelm', studentMessage: "I have so much to do I don't even know where to start.", idealResponse: "When everything feels urgent, it's hard to pick a starting point. If you could only do one thing today, what would move the needle most?" },
+  { category: 'overwhelm', studentMessage: "I feel completely burnt out but I can't afford to slow down.", idealResponse: "Burnout rarely resolves by pushing harder — it usually needs some kind of release valve. What's one small thing you could pause, even briefly?" },
+  { category: 'overwhelm', studentMessage: "I'm juggling college, a part-time job, and family stuff and it's too much.", idealResponse: "That's genuinely a lot for anyone to hold at once. Which of those three feels most able to flex, even slightly, this week?" },
+
+  { category: 'low_mood', studentMessage: "I just feel kind of numb and don't know why.", idealResponse: "Numbness can actually be the mind's way of protecting itself from something overwhelming. Has anything changed recently, even something small?" },
+  { category: 'low_mood', studentMessage: "I don't enjoy things I used to like doing anymore.", idealResponse: "That loss of enjoyment is worth paying attention to, not dismissing. Is there anything, even in a small dose, that still feels slightly good?" },
+  { category: 'low_mood', studentMessage: "I feel like a burden to my friends when I talk about how I'm feeling.", idealResponse: "That's a heavy thought to carry on top of everything else. Have your friends actually said that, or is this the thought talking?" },
+
+  { category: 'frustration', studentMessage: "I got so angry at my roommate today and I don't know why it hit me so hard.", idealResponse: "Strong reactions often aren't just about the surface moment — they can tap into something bigger underneath. What else has been building up lately?" },
+  { category: 'frustration', studentMessage: "I'm frustrated with myself for not sticking to my study schedule.", idealResponse: "Self-frustration can actually make it harder to get back on track. What would restarting look like without needing to 'make up' for missed days?" },
+
+  { category: 'catastrophizing', studentMessage: "If I fail this one assignment, my whole semester is ruined.", idealResponse: "That's a big jump from one assignment to the whole semester. What's the actual, realistic impact of this one grade on your overall outcome?" },
+  { category: 'mind_reading', studentMessage: "My professor looked annoyed when I asked a question, I think they think I'm dumb.", idealResponse: "That's one interpretation of a look — but looks can mean a lot of things that have nothing to do with you. What's another possible explanation?" },
+  { category: 'black_white_thinking', studentMessage: "I either do everything on my to-do list or the whole day is a failure.", idealResponse: "That's a pretty strict all-or-nothing rule to hold yourself to. What would it look like to count the day as a win if you did even half?" },
+
+  { category: 'avoidance', studentMessage: "I've been avoiding my friend group chat because I feel too behind on everything.", idealResponse: "Avoidance often grows the very thing it's trying to escape. What's the smallest possible step back in — even just reading, not replying?" },
+  { category: 'low_energy', studentMessage: "I don't have the energy to do anything productive today.", idealResponse: "Low-energy days don't have to mean zero-progress days. What's one tiny, 2-minute task that would still count as something?" },
+
+  { category: 'neutral_checkin', studentMessage: "I'm doing okay today, just wanted to check in.", idealResponse: "Glad to hear that. Anything on your mind you want to talk through, or just checking in for the sake of it?" },
+  { category: 'small_win', studentMessage: "I actually finished my assignment early today!", idealResponse: "That's genuinely great — what made today different from the days it's felt harder to start?" },
+  { category: 'gratitude', studentMessage: "I had a really good conversation with a friend today and it helped a lot.", idealResponse: "That sounds like it meant a lot. What was it about that conversation that felt different or helpful?" },
+
+  { category: 'relationships', studentMessage: "My relationship ended recently and I can't stop thinking about it.", idealResponse: "Breakups can take up a lot of mental space, especially early on. Is it specific memories looping, or more a general sadness right now?" },
+  { category: 'relationships', studentMessage: "I keep checking my ex's social media even though it makes me feel worse.", idealResponse: "That's such a common pull, even knowing it doesn't help. What would taking a short break from checking look like, just as an experiment?" },
+
+  { category: 'body_image', studentMessage: "I've been really critical of how I look lately.", idealResponse: "That inner critic can get loud sometimes. Has something specific triggered it recently, or has it been building gradually?" },
+
+  { category: 'financial_stress', studentMessage: "I'm stressed about money and it's affecting my focus on studies.", idealResponse: "Financial stress has a way of creeping into everything else, including focus. Is there one specific money worry that's loudest right now?" },
+
+  { category: 'future_anxiety', studentMessage: "I have no idea what I want to do after college and it scares me.", idealResponse: "Uncertainty about the future is uncomfortable, but it doesn't mean something's wrong with you. What's one direction that feels even slightly interesting right now, not a final decision?" },
+  { category: 'future_anxiety', studentMessage: "Everyone seems to have a clear career plan except me.", idealResponse: "A lot of people project more certainty than they actually feel. What would it look like to explore one option without needing it to be the final answer?" },
+]
